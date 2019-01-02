@@ -1,1 +1,0 @@
-print ("Artemka ne molodec")

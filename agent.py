@@ -142,15 +142,15 @@ class EpisodeHistory:
             self.ax.set_xlim(plot_left_edge, plot_left_edge + self.plot_episode_count)
 
         # Update rolling mean plot.
-        mean_kernel_size = 101
-        rolling_mean_data = np.concatenate((np.zeros(mean_kernel_size), self.lengths[plot_left_edge:episode_index]))
-        rolling_means = pd.rolling_mean(
-            rolling_mean_data,
-            window=mean_kernel_size,
-            min_periods=0
-        )[mean_kernel_size:]
-        self.mean_plot.set_xdata(range(plot_left_edge, plot_left_edge + len(rolling_means)))
-        self.mean_plot.set_ydata(rolling_means)
+        #mean_kernel_size = 101
+        #rolling_mean_data = np.concatenate((np.zeros(mean_kernel_size), self.lengths[plot_left_edge:episode_index]))
+        #rolling_means = pd.rolling_mean(
+        #    rolling_mean_data,
+        #    window=mean_kernel_size,
+        #    min_periods=0
+        #)[mean_kernel_size:]
+        #self.mean_plot.set_xdata(range(plot_left_edge, plot_left_edge + len(rolling_means)))
+        #self.mean_plot.set_ydata(rolling_means)
 
         # Repaint the surface.
         plt.draw()
