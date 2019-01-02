@@ -1,3 +1,0 @@
-[submodule "gym"]
-      path = gym
-      url = git://github.com/openai/gym.git
