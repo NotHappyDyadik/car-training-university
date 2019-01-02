@@ -1,1 +1,1 @@
-print ("Artemka molodec")
+print ("Artemka ne molodec")
