@@ -13,7 +13,6 @@ folder = 'tetris_race_qlearning'
 env_name = 'TetrisRace-v0' # do not change this
 Test_Episodes = 3000
 
-
 class TetrisRaceQLearningAgent:
     def __init__(self,env,learning_rate = 0.5, discount_factor =0.5,
                  exploration_rate =0.5, exploration_decay_rate =0.5):
@@ -169,8 +168,7 @@ class EpisodeHistory:
 
 class Controler:
     
-    def init(self, parent_mode = True , episodes_num = Test_Episodes, global_env = []):
-
+    def __init__(self, parent_mode = True, episodes_num = Test_Episodes, global_env = []):
         self.team_name =  team_name
         self.exp_dir = folder + '/' + self.team_name
         random_state = 0
@@ -196,20 +194,19 @@ class Controler:
             #
             # Best choice will try any of this different options for better understanding and
             # optimizing the solution.
-            env.init(smooth_car_step=2, world_type="Fat", walls_num=30, 
-                     walls_spread=20, episodes_to_run=episodes_num, level_difficulty='Easy', car_spawn='Center')
             env = gym.make(env_name)
+            env.__init__(smooth_car_step=2, world_type="Fat", walls_num=30,
+                         walls_spread=20, episodes_to_run=episodes_num, level_difficulty='Easy', car_spawn='Center')
             env.seed(random_state)
             np.random.seed(random_state)
             self.lr = 10
             self.df = 10
             self.exr = 10
             self.exrd = 10
-            episode_history, end_index = self.run_agent(self, self.lr, self.df, self.exr, self.exrd, 
-               self.env, verbose=False)
+
             self.env = gym.wrappers.Monitor(env, self.exp_dir + '/video', force=True, resume=False,
                                             video_callable=self.video_callable)
-            episode_history, end_index = self.run_agent(self, lr, df, exr, exrd, self.env, verbose=False)
+            episode_history, end_index = self.run_agent(self, self.lr, self.df, self.exr, self.exrd, self.env, verbose=False)
         else:
             # Here all data about env will received from main script, so
             # each team will work with equal initial conditions
@@ -217,13 +214,10 @@ class Controler:
             env = global_env
             env.seed(random_state)
             np.random.seed(random_state)
-            episode_history, end_index = self.run_agent(self, self.lr, self.df, self.exr, self.exrd, 
-              self.env, verbose=False)
+
             self.env = gym.wrappers.Monitor(env, self.exp_dir + '/video', force=True, resume=False,
                                             video_callable=self.video_callable)
-            episode_history, end_index = self.run_agent(self, self.learning_rate, self.discount_factor,
-                                                        self.exploration_rate, self.exploration_decay_rate,
-                                                        self.env, verbose=False)
+            episode_history, end_index = self.run_agent(self, self.lr, self.df, self.exr, self.exrd, self.env, verbose=False)
 
     def run_agent(self, rate, factor, exploration, exp_decay, env, verbose=False):
         max_episodes_to_run = env.unwrapped.total_episodes
@@ -344,8 +338,7 @@ class Controler:
                                     'Reward:{}',
                                     'Car pos:{}',
                                     'WallY pos:{}'])
-        print('Timestep: format string ', format_string.format(index, action, reward,
-                                                               observation[0], observation[1]))
+        print('Timestep: format string ', format_string.format(index, action, reward, observation[0], observation[1]))
 
     def save_history(self, history, experiment_dir):
         # Save the episode lengths to CSV.
