@@ -59,6 +59,16 @@ class TetrisRaceQLearningAgent:
         #   Remember that agent should choose max of Q-value in  each step
         self.check_state_exist(state_)
 
+	def get_info_about_state(self, state):
+        for i in self.q_table:
+            stateInfo= state[:2]
+            q_table_state= np.asarray(i[2])
+            compareFlag = True
+            for j in range(0, len(stateInfo)):
+                if not stateInfo[j] == q_table_state[j]:
+                    compareFlag= False
+            if compareFlag:
+                return i
 
     def check_state_exist(self, state):
         # =============== TODO: Your code here ===============
