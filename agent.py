@@ -3,15 +3,15 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import time
 import pickle
 import warnings
 warnings.filterwarnings("ignore")
 
 global team_name, folder, env_name
-team_name = 'ml_team # N' # TODO: change your team name
+team_name = 'ml_team # 1' # TODO: change your team name
 folder = 'tetris_race_qlearning'
 env_name = 'TetrisRace-v0' # do not change this
+Test_Episodes = 3000
 
 
 class TetrisRaceQLearningAgent:
@@ -25,6 +25,7 @@ class TetrisRaceQLearningAgent:
         self._num_actions = len(self.actions)
         self.state = None
         self.action = None
+        self.q_table = []
 
         # =============== TODO: Your code here ===============
         #  We'll use tabular Q-Learning in our agent, which means
@@ -36,8 +37,6 @@ class TetrisRaceQLearningAgent:
         #  of each action, which agent can do in current env.
 
         self.wall_iterator = env.unwrapped.wall_iterator # passed walls counter
-
-        self.q_table = None
 
     def choose_action(self, observation):
         # =============== TODO: Your code here ===============
@@ -60,9 +59,7 @@ class TetrisRaceQLearningAgent:
         #   an agent can update knowledge about env, updating Q-table.
         #   Remember that agent should choose max of Q-value in  each step
         self.check_state_exist(state_)
-        self.q_table = None
 
-        return self.q_table
 
     def check_state_exist(self, state):
         # =============== TODO: Your code here ===============
@@ -201,15 +198,14 @@ class Controler:
             env = gym.make(env_name)
             env.seed(random_state)
             np.random.seed(random_state)
-            lr = 10
-            df = 10
-            exr = 10
-            exrd = 10
+            self.lr = 10
+            self.df = 10
+            self.exr = 10
+            self.exrd = 10
 
             self.env = gym.wrappers.Monitor(env, self.exp_dir + '/video', force=True, resume=False,
                                             video_callable=self.video_callable)
-            episode_history, end_index = self.run_agent(self, lr, df, exr, exrd, self.env,
-                                                        verbose=False)
+            episode_history, end_index = self.run_agent(self, lr, df, exr, exrd, self.env, verbose=False)
         else:
             # Here all data about env will received from main script, so
             # each team will work with equal initial conditions
@@ -273,13 +269,12 @@ class Controler:
                 if done and timestep_index < max_timesteps_per_episode - 1:
                     reward = -max_episodes_to_run
 
-                QDF = agent.act(observation, action, reward, observation_)
+                agent.act(observation, action, reward, observation_)
                 observation = observation_
 
                 if done:
                     self.done_manager(self, episode_index, [], [], 'D')
                     if self.done_manager(self, episode_index, [], finish_freq, 'S') and finish_freq[1]:
-                        foo = Classification()
                         finish_freq[1] = False
 
                     episode_history[episode_index] = timestep_index + 1
@@ -289,7 +284,6 @@ class Controler:
                     if episode_history.is_goal_reached(episode_index):
                         print("Goal reached after {} episodes!".format(episode_index + 1))
                         end_index = episode_index + 1
-                        foo = Regression(QDF)
                         self.done_manager(self, [], plt, [], 'P')
 
                         return episode_history, end_index
@@ -318,7 +312,7 @@ class Controler:
         if mode == 'P':  # work woth progress plot
             path = self.exp_dir + '/learn_curve'
             name = '/W ' + str(self.env.unwrapped.walls_num) + \
-                   '_LR ' + str(self.learning_rate) + '_DF ' + str(self.discount_factor)
+                   '_LR ' + str(self.lr) + '_DF ' + str(self.df)
             if not os.path.exists(path):
                 os.makedirs(path)
             plt.savefig(path + name + '.png')
@@ -353,53 +347,6 @@ class Controler:
         filename = os.path.join(experiment_dir, "episode_history.csv")
         dataframe = pd.DataFrame(history.lengths, columns=["length"])
         dataframe.to_csv(filename, header=True, index_label="episode")
-
-
-class Regression:
-    def __init__(self, dataset, dependent_feature='DepDelay'):
-        # =============== TODO: Your code here ===============
-        # One of subtask. Receives dataset, must return prediction vector
-        # DepDelay - flight departure delay. You should predict departure delay depending on other features.
-        # You should add the code that will:
-        #   - read dataset from file
-        pass
-
-    def coolMethodThatWillDoAllTheNeededStuffWithDataset(self):
-        # =============== TODO: Your code here ===============
-        # This is the method that will prepare dataset
-        # You should add the code that will:
-        #   - clean dataset from useless features
-        #   - split data set to train and test parts
-        #   - implement lable encoding and one hot encoding if needed
-        #   - create regression model and fit it
-        #   - make prediction values of dependant feature
-        #   - calculate r2_score to check prediction accuracy
-        #   - save the model
-        #   - return r2_score, modified dataset, predicted values vector, saved regression model
-        print('Hey, sexy mama, wanna kill all humans?')
-
-
-
-class Classification:
-    def __init__(self):
-        # =============== TODO: Your code here ===============
-        # One of subtask. Receives dataset, must return prediction vector
-        # You should add the code that will:
-        #   - read dataset from file
-        pass
-
-    def coolMethodThatWillDoAllTheNeededStuffWithDataset(self):
-        #   - separate SalaryNormalized into two (0 and 1) classes by median
-        #   - join all text features into one
-        #   - make vectorization using sklearn.countVectoriser or any other vectorizer
-        #   - fit classification model
-        #   - calculate precision, recall and f1-score
-        #   - save the model
-        #   - return f1-score, modified dataset, saved classification model
-        # #
-
-        print('Kill all humans, kill all humans, must kill all humans...')
-        pass
 
 
 def main(env, parent_mode = True):
