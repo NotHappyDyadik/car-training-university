@@ -60,15 +60,20 @@ class TetrisRaceQLearningAgent:
         self.check_state_exist(state_)
 
     def get_info_about_state(self, state):
+        #cause Memory leak
+        #for i in self.q_table:
+        #    stateInfo= state[:2]
+        #    q_table_state= np.asarray(i[2])
+        #    compareFlag = True
+        #    for j in range(0, len(stateInfo)):
+        #        if not stateInfo[j] == q_table_state[j]:
+        #            compareFlag= False
+        #    if compareFlag:
+        #        return i
+        stateInfo= tuple(state[:2])
         for i in self.q_table:
-            stateInfo= state[:2]
-            q_table_state= np.asarray(i[2])
-            compareFlag = True
-            for j in range(0, len(stateInfo)):
-                if not stateInfo[j] == q_table_state[j]:
-                    compareFlag= False
-            if compareFlag:
-                return i
+            if i[2] == stateInfo:
+               return i
 
     def check_state_exist(self, state): # add new state cell at q_table if it wasn't at q_table before
         # =============== TODO: Your code here ===============
