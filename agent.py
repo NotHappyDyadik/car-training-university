@@ -187,7 +187,6 @@ class EpisodeHistory:
 
 
 class Controler:
-    
     def __init__(self, parent_mode = True, episodes_num = Test_Episodes, global_env = []):
         self.team_name =  team_name
         self.exp_dir = folder + '/' + self.team_name
