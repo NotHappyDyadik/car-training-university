@@ -59,7 +59,7 @@ class TetrisRaceQLearningAgent:
         #   Remember that agent should choose max of Q-value in  each step
         self.check_state_exist(state_)
 
-    def get_info_about_state(self, state):
+	def get_info_about_state(self, state):
         for i in self.q_table:
             stateInfo= state[:2]
             q_table_state= np.asarray(i[2])
@@ -70,11 +70,16 @@ class TetrisRaceQLearningAgent:
             if compareFlag:
                 return i
 
-    def check_state_exist(self, state):
+    def check_state_exist(self, state):# add new state cell at q_table if it wasn't at q_table before
         # =============== TODO: Your code here ===============
         #  Here agent can write to Q-table new data vector if current
         #  state is unknown for the moment
-        pass
+    
+        already_exist_at_q_table_flag = self.get_info_about_state(state)
+        if not already_exist_at_q_table_flag:
+            state_ = [0, 0, tuple(state[:2])]
+            self.q_table.append(state_)
+        return already_exist_at_q_table_flag
 
 
 class EpisodeHistory:
