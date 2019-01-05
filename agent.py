@@ -168,7 +168,9 @@ class EpisodeHistory:
 
 
 class Controler:
-    def __init__(self, parent_mode = True , episodes_num = 10000, global_env = []):
+    
+    def init(self, parent_mode = True , episodes_num = Test_Episodes, global_env = []):
+
         self.team_name =  team_name
         self.exp_dir = folder + '/' + self.team_name
         random_state = 0
@@ -194,7 +196,8 @@ class Controler:
             #
             # Best choice will try any of this different options for better understanding and
             # optimizing the solution.
-
+            env.init(smooth_car_step=2, world_type="Fat", walls_num=30, 
+                     walls_spread=20, episodes_to_run=episodes_num, level_difficulty='Easy', car_spawn='Center')
             env = gym.make(env_name)
             env.seed(random_state)
             np.random.seed(random_state)
@@ -202,7 +205,8 @@ class Controler:
             self.df = 10
             self.exr = 10
             self.exrd = 10
-
+            episode_history, end_index = self.run_agent(self, self.lr, self.df, self.exr, self.exrd, 
+               self.env, verbose=False)
             self.env = gym.wrappers.Monitor(env, self.exp_dir + '/video', force=True, resume=False,
                                             video_callable=self.video_callable)
             episode_history, end_index = self.run_agent(self, lr, df, exr, exrd, self.env, verbose=False)
@@ -213,7 +217,8 @@ class Controler:
             env = global_env
             env.seed(random_state)
             np.random.seed(random_state)
-
+            episode_history, end_index = self.run_agent(self, self.lr, self.df, self.exr, self.exrd, 
+              self.env, verbose=False)
             self.env = gym.wrappers.Monitor(env, self.exp_dir + '/video', force=True, resume=False,
                                             video_callable=self.video_callable)
             episode_history, end_index = self.run_agent(self, self.learning_rate, self.discount_factor,
