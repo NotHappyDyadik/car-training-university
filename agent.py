@@ -310,6 +310,11 @@ class Controler:
 
                 if done and timestep_index < max_timesteps_per_episode - 1:
                     reward = -max_episodes_to_run
+                elif done and timestep_index == max_timesteps_per_episode - 1:
+                    reward = max_episodes_to_run
+                else:
+                    reward = 0
+                  
 
                 agent.act(observation, action, reward, observation_)
                 observation = observation_
