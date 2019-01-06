@@ -269,7 +269,7 @@ class Controler:
         max_episodes_to_run = env.unwrapped.total_episodes
         max_timesteps_per_episode = env.unwrapped.walls_num
 
-        goal_avg_episode_length = env.unwrapped.walls_num
+        goal_avg_episode_length = env.unwrapped.walls_num - 0.5 # used for fair calculation of finish line cross
         wall_coef = 6 / env.unwrapped.walls_num
         goal_consecutive_episodes = int(wall_coef * self.window)  # how many times agent can consecutive run succesful
 
