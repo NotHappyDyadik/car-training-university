@@ -311,12 +311,12 @@ class Controler:
                     env.render()
                     # self.log_timestep(timestep_index, action, reward, observation)
 
-                if done and timestep_index < max_timesteps_per_episode - 1:
-                    reward = -max_episodes_to_run
-                elif done and timestep_index == max_timesteps_per_episode - 1:
+                if done and timestep_index < max_timesteps_per_episode - 1: # 'timestep_index < max_timesteps_per_episode - 1' - checks if car reach finish, where 'timestep_index' - current stage index and 'max_timesteps_per_episode - 1' amount of stages with walls at all. If 'done' variable is True means that current stage was completed by crossing the finish line or hitting the wall
+                    reward = -max_episodes_to_run # set crush state reward. Setting of finish and success move states look at tetris_race(243-247), but these rewards are rewritten in the following two conditions.
+                elif done and timestep_index == max_timesteps_per_episode - 1: # crossing finish line reward
                     reward = max_episodes_to_run
-                else:
-                    reward = 0
+                else: # ordinary step reward
+                    reward = 5
                   
 
                 agent.act(observation, action, reward, observation_)
