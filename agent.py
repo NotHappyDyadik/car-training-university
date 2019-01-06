@@ -350,21 +350,6 @@ class Controler:
         # call agent draw eact N episodes
         return episode_id % 300 == 0
 
-    def log_timestep(self, index, action, reward, observation):
-        # print parameters in console
-        format_string = "   ".join(['Timestep:{}',
-                                    'Action:{}',
-                                    'Reward:{}',
-                                    'Car pos:{}',
-                                    'WallY pos:{}'])
-        print('Timestep: format string ', format_string.format(index, action, reward, observation[0], observation[1]))
-
-    def save_history(self, history, experiment_dir):
-        # Save the episode lengths to CSV.
-        filename = os.path.join(experiment_dir, "episode_history.csv")
-        dataframe = pd.DataFrame(history.lengths, columns=["length"])
-        dataframe.to_csv(filename, header=True, index_label="episode")
-
 
 def main(env, parent_mode = True):
     obj = Controler
