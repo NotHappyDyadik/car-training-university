@@ -245,10 +245,10 @@ class Controler:
                          walls_spread=20, episodes_to_run=episodes_num, level_difficulty='Easy', car_spawn='Center')
             env.seed(random_state)
             np.random.seed(random_state)
-            self.lr = 4
-            self.df = 1
-            self.exr = 2
-            self.exrd = 1
+            self.lr = 2
+            self.df = 0.5
+            self.exr = 1
+            self.exrd = 0.5
 
             self.env = gym.wrappers.Monitor(env, self.exp_dir + '/video', force=True, resume=False,
                                             video_callable=self.video_callable)
