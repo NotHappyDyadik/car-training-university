@@ -245,10 +245,10 @@ class Controler:
                          walls_spread=20, episodes_to_run=episodes_num, level_difficulty='Easy', car_spawn='Center')
             env.seed(random_state)
             np.random.seed(random_state)
-            self.lr = 2
-            self.df = 0.5
-            self.exr = 1
-            self.exrd = 0.5
+            self.lr = 1
+            self.df = 0.4
+            self.exr = 0.6
+            self.exrd = 0.1
 
             self.env = gym.wrappers.Monitor(env, self.exp_dir + '/video', force=True, resume=False,
                                             video_callable=self.video_callable)
@@ -269,7 +269,7 @@ class Controler:
         max_episodes_to_run = env.unwrapped.total_episodes
         max_timesteps_per_episode = env.unwrapped.walls_num
 
-        goal_avg_episode_length = env.unwrapped.walls_num - 0.5 # used for fair calculation of finish line cross
+        goal_avg_episode_length = env.unwrapped.walls_num - 0.5 # used for fair calculation of finish line cross (details at method "is_goal_reached" of class EpisodeHistory)
         wall_coef = 6 / env.unwrapped.walls_num
         goal_consecutive_episodes = int(wall_coef * self.window)  # how many times agent can consecutive run succesful
 
@@ -316,7 +316,7 @@ class Controler:
                 elif done and timestep_index == max_timesteps_per_episode - 1: # crossing finish line reward
                     reward = max_episodes_to_run
                 else: # ordinary step reward
-                    reward = 5
+                    reward = -5
                   
 
                 agent.act(observation, action, reward, observation_)
