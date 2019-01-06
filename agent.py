@@ -25,6 +25,7 @@ class TetrisRaceQLearningAgent:
         self.state = None
         self.action = None
         self.q_table = []
+        self.done_exode_counter = 0
 
         # =============== TODO: Your code here ===============
         #  We'll use tabular Q-Learning in our agent, which means
@@ -44,6 +45,7 @@ class TetrisRaceQLearningAgent:
             return 1
         else:
             return 0
+
 
     def choose_action(self, observation):
         # =============== TODO: Your code here ===============
@@ -65,7 +67,7 @@ class TetrisRaceQLearningAgent:
         else:
             return state_[0]
 
-    def act(self, state, action, reward, state_):
+    def act(self, state, action, reward, state_): # state - means current state; state_ - means next state
         # =============== TODO: Your code here ===============
         #  Here agent takes action('moves' somewhere), knowing
         #  the value of Q - table, corresponds current state.
@@ -74,6 +76,12 @@ class TetrisRaceQLearningAgent:
         #   an agent can update knowledge about env, updating Q-table.
         #   Remember that agent should choose max of Q-value in  each step
         self.check_state_exist(state_)
+
+        current_state_info = self.get_info_about_state(state)
+        next_state_info = self.get_info_about_state(state_)
+        current_state_info[action] += self.learning_rate * (reward + (self.discount_factor * self.get_value_of_max_q_learn_coef(next_state_info)) - self.get_value_of_max_q_learn_coef(current_state_info))
+        if reward < 0:      # counts just final episode exode, used at calculation 'exploration_rate'
+            self.done_exode_counter += 1
 
     def get_info_about_state(self, state):
         #cause Memory leak
