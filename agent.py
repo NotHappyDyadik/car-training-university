@@ -1,7 +1,6 @@
 import gym
 import os
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 import pickle
 import warnings
@@ -14,8 +13,7 @@ env_name = 'TetrisRace-v0' # do not change this
 Test_Episodes = 3000
 
 class TetrisRaceQLearningAgent:
-    def __init__(self,env,learning_rate = 0.5, discount_factor =0.5,
-                 exploration_rate =0.5, exploration_decay_rate =0.5):
+    def __init__(self,env,learning_rate = 0.5, discount_factor =0.5, exploration_rate =0.5, exploration_decay_rate =0.5):
         self.learning_rate = learning_rate
         self.discount_factor = discount_factor
         self.exploration_rate = exploration_rate
@@ -47,7 +45,6 @@ class TetrisRaceQLearningAgent:
         else:
             return 0
 
-
     def choose_action(self, observation):
         # =============== TODO: Your code here ===============
         #  Here agent must choose action on each step, solving exploration-exploitation
@@ -64,9 +61,6 @@ class TetrisRaceQLearningAgent:
             action = self.get_action_with_max_q_learn_coef(self.get_info_about_state(observation))
 
         return action
-
-
-
 
     def get_value_of_max_q_learn_coef(self, state_):
         if state_[0] == 0 and state_[1] == 0:
