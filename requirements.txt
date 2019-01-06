@@ -1,0 +1,4 @@
+pandas
+numpy
+matplotlib
+gym==0.9.5

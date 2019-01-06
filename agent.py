@@ -20,6 +20,7 @@ class TetrisRaceQLearningAgent:
         self.discount_factor = discount_factor
         self.exploration_rate = exploration_rate
         self.exploration_decay_rate = exploration_decay_rate
+        self.exploration_indicator = self.exploration_rate + self.exploration_decay_rate
         self.actions = env.unwrapped.actions
         self._num_actions = len(self.actions)
         self.state = None
@@ -55,9 +56,17 @@ class TetrisRaceQLearningAgent:
         #  Exploitation rate - choose already known actions and moving through known states.
         #  Think about right proportion that parameters for better solution
         self.check_state_exist(observation)
-        action = np.random.choice(self.actions)
+        tmp_exploration_rate = self.exploration_indicator - (self.done_exode_counter / Test_Episodes)
+
+        if (np.random.rand() < tmp_exploration_rate):
+            action = np.random.choice(self.actions)
+        else:
+            action = self.get_action_with_max_q_learn_coef(self.get_info_about_state(observation))
 
         return action
+
+
+
 
     def get_value_of_max_q_learn_coef(self, state_):
         if state_[0] == 0 and state_[1] == 0:
