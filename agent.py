@@ -37,6 +37,14 @@ class TetrisRaceQLearningAgent:
 
         self.wall_iterator = env.unwrapped.wall_iterator # passed walls counter
 
+    def get_action_with_max_q_learn_coef(self, state_):
+        if state_[0] == 0 and state_[1] == 0:
+            return np.random.choice(self.actions)
+        elif state_[1] > state_[0]:
+            return 1
+        else:
+            return 0
+
     def choose_action(self, observation):
         # =============== TODO: Your code here ===============
         #  Here agent must choose action on each step, solving exploration-exploitation
@@ -48,6 +56,14 @@ class TetrisRaceQLearningAgent:
         action = np.random.choice(self.actions)
 
         return action
+
+    def get_value_of_max_q_learn_coef(self, state_):
+        if state_[0] == 0 and state_[1] == 0:
+            return 0
+        elif state_[1] > state_[0]:
+            return state_[1]
+        else:
+            return state_[0]
 
     def act(self, state, action, reward, state_):
         # =============== TODO: Your code here ===============
