@@ -388,7 +388,7 @@ class Controler:
 
     def video_callable(episode_id):
         # call agent draw eact N episodes
-        return episode_id % 300 == 0
+        return episode_id % 1000 == 0
 
 
 def main(env, parent_mode = True):
