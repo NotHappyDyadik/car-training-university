@@ -70,7 +70,10 @@ class TetrisRaceQLearningAgent:
         else:
             return state_[0]
 
-    def act(self, state, action, reward, state_): # state - means prev state; state_ - means current state. reward for current state and action which was made by agent from prev state to move in current state
+
+    def act(self, state, action, reward, state_): # state - means current state; state_ - means next state
+        # 'reward' means reward for current state and 'action' means action (0/1) which was made by agent
+        # from prev state to move in current state
         # =============== TODO: Your code here ===============
         #  Here agent takes action('moves' somewhere), knowing
         #  the value of Q - table, corresponds current state.
@@ -80,6 +83,9 @@ class TetrisRaceQLearningAgent:
         #   Remember that agent should choose max of Q-value in  each step
         self.check_state_exist(state_)
 
+        # obtaining the previous and current state of
+        # the agent to perform the next action using the Bellman formula
+
         current_state_info = self.get_info_about_state(state)
         next_state_info = self.get_info_about_state(state_)
 
@@ -87,7 +93,8 @@ class TetrisRaceQLearningAgent:
         if reward < 0:      # counts just final episode exode, used at calculation 'exploration_rate'
             self.done_exode_counter += 1
 
-    def get_info_about_state(self, state):
+    def get_info_about_state(self, state): # obtaining information about the coefficients of rotation of the agent
+        # to the left and right, as well as the positions on the current position of the agent
         #cause Memory leak
         #for i in self.q_table:
         #    stateInfo= state[:2]
