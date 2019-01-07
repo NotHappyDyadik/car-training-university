@@ -14,11 +14,11 @@ Test_Episodes = 3000
 
 class TetrisRaceQLearningAgent:
     def __init__(self,env,learning_rate = 0.5, discount_factor =0.5, exploration_rate =0.5, exploration_decay_rate =0.5):
-        self.learning_rate = learning_rate
-        self.discount_factor = discount_factor
-        self.exploration_rate = exploration_rate
-        self.exploration_decay_rate = exploration_decay_rate
-        self.exploration_indicator = self.exploration_rate + self.exploration_decay_rate
+        self.learning_rate = learning_rate # learning rate determines multiplier value by which weights or the coefficients changes
+        self.discount_factor = discount_factor # represents how much future events lose their value according to how far away in time they are
+        self.exploration_rate = exploration_rate # speed of agent learning at the beginning
+        self.exploration_decay_rate = exploration_decay_rate # learning speed decrease factor
+        self.exploration_indicator = self.exploration_rate + self.exploration_decay_rate # calculates final explaration coef
         self.actions = env.unwrapped.actions
         self._num_actions = len(self.actions)
         self.state = None
@@ -37,7 +37,7 @@ class TetrisRaceQLearningAgent:
 
         self.wall_iterator = env.unwrapped.wall_iterator # passed walls counter
 
-    def get_action_with_max_q_learn_coef(self, state_):
+    def get_action_with_max_q_learn_coef(self, state_): # return action (0-left or 1-right) which have bigger q learning coef
         if state_[0] == 0 and state_[1] == 0:
             return np.random.choice(self.actions)
         elif state_[1] > state_[0]:
@@ -45,7 +45,7 @@ class TetrisRaceQLearningAgent:
         else:
             return 0
 
-    def choose_action(self, observation):
+    def choose_action(self, observation): # method which determines next agent move
         # =============== TODO: Your code here ===============
         #  Here agent must choose action on each step, solving exploration-exploitation
         #  trade-off. Remember that in general exploration rate is responsible for
@@ -53,7 +53,7 @@ class TetrisRaceQLearningAgent:
         #  Exploitation rate - choose already known actions and moving through known states.
         #  Think about right proportion that parameters for better solution
         self.check_state_exist(observation)
-        tmp_exploration_rate = self.exploration_indicator - (self.done_exode_counter / Test_Episodes)
+        tmp_exploration_rate = self.exploration_indicator - (self.done_exode_counter / Test_Episodes) # 'exploration_indicator' - look above. '(self.done_exode_counter / Test_Episodes)' - what percentage of attempts already was used
 
         if (np.random.rand() < tmp_exploration_rate):
             action = np.random.choice(self.actions)
@@ -62,7 +62,7 @@ class TetrisRaceQLearningAgent:
 
         return action
 
-    def get_value_of_max_q_learn_coef(self, state_):
+    def get_value_of_max_q_learn_coef(self, state_): # return biggest q learning coef
         if state_[0] == 0 and state_[1] == 0:
             return 0
         elif state_[1] > state_[0]:
@@ -70,7 +70,7 @@ class TetrisRaceQLearningAgent:
         else:
             return state_[0]
 
-    def act(self, state, action, reward, state_): # state - means current state; state_ - means next state
+    def act(self, state, action, reward, state_): # state - means prev state; state_ - means current state. reward for current state and action which was made by agent from prev state to move in current state
         # =============== TODO: Your code here ===============
         #  Here agent takes action('moves' somewhere), knowing
         #  the value of Q - table, corresponds current state.
@@ -82,6 +82,7 @@ class TetrisRaceQLearningAgent:
 
         current_state_info = self.get_info_about_state(state)
         next_state_info = self.get_info_about_state(state_)
+
         current_state_info[action] += self.learning_rate * (reward + (self.discount_factor * self.get_value_of_max_q_learn_coef(next_state_info)) - self.get_value_of_max_q_learn_coef(current_state_info))
         if reward < 0:      # counts just final episode exode, used at calculation 'exploration_rate'
             self.done_exode_counter += 1
@@ -100,7 +101,7 @@ class TetrisRaceQLearningAgent:
         stateInfo= tuple(state[:2])
         for i in self.q_table:
             if i[2] == stateInfo:
-               return i
+                return i
 
     def check_state_exist(self, state): # add new state cell at q_table if it wasn't at q_table before
         # =============== TODO: Your code here ===============
@@ -242,13 +243,13 @@ class Controler:
             # optimizing the solution.
             env = gym.make(env_name)
             env.__init__(smooth_car_step=2, world_type="Fat", walls_num=33,
-                         walls_spread=9, episodes_to_run=episodes_num, level_difficulty='Easy', car_spawn='Center')
+                         walls_spread=15, episodes_to_run=episodes_num, level_difficulty='Easy', car_spawn='Center')
             env.seed(random_state)
             np.random.seed(random_state)
-            self.lr = 1
-            self.df = 0.4
-            self.exr = 0.6
-            self.exrd = 0.1
+            self.lr = 1 # learning rate determines multiplier value by which weights or the coefficients changes
+            self.df = 0.4 # represents how much future events lose their value according to how far away in time they are
+            self.exr = 0.6 # speed of agent learning at the beginning
+            self.exrd = 0.1 # learning speed decrease factor
 
             self.env = gym.wrappers.Monitor(env, self.exp_dir + '/video', force=True, resume=False,
                                             video_callable=self.video_callable)
@@ -265,7 +266,7 @@ class Controler:
                                             video_callable=self.video_callable)
             episode_history, end_index = self.run_agent(self, self.lr, self.df, self.exr, self.exrd, self.env, verbose=False)
 
-    def run_agent(self, rate, factor, exploration, exp_decay, env, verbose=False):
+    def run_agent(self, rate, factor, exploration, exp_decay, env, verbose=False): # Main class with main loop
         max_episodes_to_run = env.unwrapped.total_episodes
         max_timesteps_per_episode = env.unwrapped.walls_num
 
