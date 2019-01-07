@@ -241,8 +241,8 @@ class Controler:
             # Best choice will try any of this different options for better understanding and
             # optimizing the solution.
             env = gym.make(env_name)
-            env.__init__(smooth_car_step=2, world_type="Fat", walls_num=30,
-                         walls_spread=20, episodes_to_run=episodes_num, level_difficulty='Easy', car_spawn='Center')
+            env.__init__(smooth_car_step=2, world_type="Fat", walls_num=33,
+                         walls_spread=9, episodes_to_run=episodes_num, level_difficulty='Easy', car_spawn='Center')
             env.seed(random_state)
             np.random.seed(random_state)
             self.lr = 1
