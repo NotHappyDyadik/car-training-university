@@ -71,9 +71,7 @@ class TetrisRaceQLearningAgent:
             return state_[0]
 
 
-    def act(self, state, action, reward, state_): # state - means current state; state_ - means next state
-        # 'reward' means reward for current state and 'action' means action (0/1) which was made by agent
-        # from prev state to move in current state
+    def act(self, state, action, reward, state_): # state - means past state; state_ - means new state after action 'reward' means reward for current state and 'action' means action (0/1) which was made by agent from prev state to move in current state
         # =============== TODO: Your code here ===============
         #  Here agent takes action('moves' somewhere), knowing
         #  the value of Q - table, corresponds current state.
