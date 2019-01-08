@@ -25,7 +25,8 @@ class TetrisRaceQLearningAgent:
         self.action = None
         self.q_table = []
         self.done_exode_counter = 0
-
+			
+	#Всем спасибо, все свободны!
         # =============== TODO: Your code here ===============
         #  We'll use tabular Q-Learning in our agent, which means
         #  we need to allocate a Q - Table.Think about what exactly
